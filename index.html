@@ -7,10 +7,10 @@
       content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
     />
     <title>Room Air Quality</title>
-
+<!--
     <script src="lib/moment.min.js"></script>
     <script src="lib/moment-timezone-with-data-2012-2022.min.js"></script>
-
+-->
     <link
       href="https://fonts.googleapis.com/css2?family=Lato:wght@100&display=swap"
       rel="stylesheet"
@@ -30,7 +30,7 @@
   <body>
     <div class="ui container summary">
       <div class="ui grid">
-        <div id="temperature" class="eight wide column sensor-item">
+        <div id="temperature" class="sixteen wide column sensor-item">
           <div class="heading">
             <img class="svg-icon" src="./images/thermometer-outline.svg" />
             Temperature
@@ -40,7 +40,7 @@
             <span class="unit">℃</span>
           </div>
         </div>
-        <div id="humidity" class="eight wide column sensor-item">
+        <div id="humidity" class="sixteen wide column sensor-item">
           <div class="heading">
             <img class="svg-icon" src="./images/water-outline.svg" /> Humidity
           </div>
@@ -49,6 +49,7 @@
             <span class="unit">%</span>
           </div>
         </div>
+<!--
         <div id="co2" class="sixteen wide column sensor-item">
           <div class="heading">
             <img class="svg-icon" src="./images/cloud-outline.svg" /> CO2
@@ -58,6 +59,7 @@
             <span class="unit">ppm</span>
           </div>
         </div>
+-->
         <div id="pressure" class="sixteen wide column sensor-item">
           <div class="heading">
             <img class="svg-icon" src="./images/sunny-outline.svg" /> Pressure
@@ -73,10 +75,9 @@
     <script>
       async function retrieveData() {
         const res = await Promise.all([
-          fetch("./data/BH1750.json"),
-          fetch("./data/BMP180.json"),
-          fetch("./data/HTU21D.json"),
-          fetch("./data/MH_Z19.json"),
+          fetch("./temperature.json"),
+          fetch("./pressure.json"),
+          fetch("./humidity.json"),
         ]);
         const data = (await Promise.all(res.map((r) => r.json()))).reduce(
           (item, data) => ({
@@ -94,20 +95,23 @@
           document.querySelector(
             "#temperature .value"
           ).innerHTML = new Intl.NumberFormat().format(
-            Math.round(data.temperature)
+            // Math.round(data.temperature)
+            data.temperature
           );
           document.querySelector(
             "#humidity .value"
           ).innerHTML = new Intl.NumberFormat().format(
-            Math.round(data.humidity)
+            // Math.round(data.humidity)
+            data.humidity
           );
-          document.querySelector(
-            "#co2 .value"
-          ).innerHTML = new Intl.NumberFormat().format(data.co2);
+          // document.querySelector(
+          //   "#co2 .value"
+          // ).innerHTML = new Intl.NumberFormat().format(data.co2);
           document.querySelector(
             "#pressure .value"
           ).innerHTML = new Intl.NumberFormat().format(
-            Math.round(data.pressure)
+            // Math.round(data.pressure)
+            data.pressure
           );
 
           if (data.co2 >= 1000) {
@@ -121,7 +125,7 @@
         audio.play();
       }
 
-      setInterval(updateValues, 60 * 1000);
+      setInterval(updateValues, 30 * 1000);
       updateValues();
     </script>
   </body>
